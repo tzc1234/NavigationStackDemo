@@ -27,16 +27,22 @@ final class Flow {
         self.navigationControlViewModel = navigationControlViewModel
     }
     
+    private var makeSheet: (() -> AnyView)?
+    
     @ViewBuilder
     func startView() -> some View {
-        NavigationControlView(viewModel: navigationControlViewModel) {
+        NavigationControlView(viewModel: navigationControlViewModel, content: {
             StartView(tap: { [weak self] in
                 guard let self = self else { return }
                 
                 self.navigationControlViewModel.show(NextView(view: self.makeView1()))
             })
             .navigationDestination(for: NextView.self) { $0.view }
-        }
+        }, sheet: getSheet)
+    }
+    
+    private func getSheet() -> AnyView? {
+        makeSheet?()
     }
     
     private func makeView1() -> AnyView {
@@ -50,7 +56,13 @@ final class Flow {
     
     private func makeView2() -> AnyView {
         View2(tap: { [weak self] in
-            self?.navigationControlViewModel.popAll()
+            self?.navigationControlViewModel.showSheet()
+            self?.makeSheet = {
+                PopoverView(tap: {
+                    self?.navigationControlViewModel.hideSheet()
+                })
+                .toAnyView
+            }
         })
         .toAnyView
     }
@@ -101,5 +113,20 @@ struct View2: View {
             Button("Click2", action: tap)
         }
         .navigationTitle("View2")
+    }
+}
+
+struct PopoverView: View {
+    let tap: () -> Void
+    
+    init(tap: @escaping () -> Void) {
+        self.tap = tap
+        print("Popover")
+    }
+    
+    var body: some View {
+        VStack {
+            Button("Popover Click", action: tap)
+        }
     }
 }

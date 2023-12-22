@@ -9,6 +9,7 @@ import SwiftUI
 
 final class NavigationControlViewModel: ObservableObject {
     @Published var path = [NextView]()
+    @Published var isShowingSheet = false
     
     func show(_ next: NextView) {
         path.append(next)
@@ -17,13 +18,26 @@ final class NavigationControlViewModel: ObservableObject {
     func popAll() {
         path.removeAll()
     }
+    
+    func showSheet() {
+        isShowingSheet = true
+    }
+    
+    func hideSheet() {
+        isShowingSheet = false
+    }
 }
 
 struct NavigationControlView<Content: View>: View {
     @ObservedObject var viewModel: NavigationControlViewModel
     let content: () -> Content
+    var sheet: () -> AnyView?
     
     var body: some View {
-        NavigationStack(path: $viewModel.path, root: content)
+        ZStack {
+            NavigationStack(path: $viewModel.path, root: content)
+        }.sheet(isPresented: $viewModel.isShowingSheet, content: {
+            sheet()
+        })
     }
 }
