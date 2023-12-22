@@ -10,7 +10,7 @@ import SwiftUI
 final class NavigationControlViewModel: ObservableObject {
     @Published var path = [NextView]()
     
-    func push(_ next: NextView) {
+    func show(_ next: NextView) {
         path.append(next)
     }
     

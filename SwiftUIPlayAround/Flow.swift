@@ -33,7 +33,7 @@ final class Flow {
             StartView(tap: { [weak self] in
                 guard let self = self else { return }
                 
-                self.navigationControlViewModel.push(NextView(view: self.makeView1()))
+                self.navigationControlViewModel.show(NextView(view: self.makeView1()))
             })
             .navigationDestination(for: NextView.self) { $0.view }
         }
@@ -43,7 +43,7 @@ final class Flow {
         View1(tap: { [weak self] in
             guard let self else { return }
             
-            self.navigationControlViewModel.push(NextView(view: self.makeView2()))
+            self.navigationControlViewModel.show(NextView(view: self.makeView2()))
         })
         .toAnyView
     }
