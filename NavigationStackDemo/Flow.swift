@@ -7,11 +7,11 @@
 
 import SwiftUI
 
-struct NavigationDestination: Hashable {
+struct NavigationDestination<Content: View>: Hashable {
     private let id = UUID()
-    let nextView: AnyView
+    let nextView: Content
     
-    init(nextView: AnyView) {
+    init(nextView: Content) {
         self.nextView = nextView
     }
     
@@ -41,9 +41,9 @@ final class Flow {
                 HomeView(tap: { [weak self] in
                     self?.showView1()
                 })
-                .navigationDestination(for: NavigationDestination.self) { destination in
-                    destination.nextView
-                }
+                .navigationDestinationFor(viewType: View1.self)
+                .navigationDestinationFor(viewType: View2.self)
+                .navigationDestinationFor(viewType: View3.self)
             },
             sheet: { [weak self] in
                 self?.showSheet?()
@@ -57,7 +57,6 @@ final class Flow {
                 nextView: View1(
                     tap: { [weak self] in self?.showView2() }
                 )
-                .toAnyView
             )
         )
     }
@@ -70,7 +69,6 @@ final class Flow {
                     back: { [weak self] in self?.viewModel.popTo(index: 1) },
                     backToHome: { [weak self] in self?.viewModel.popAll() }
                 )
-                .toAnyView
             )
         )
     }
@@ -84,7 +82,6 @@ final class Flow {
                     backToView1: { [weak self] in self?.viewModel.popTo(index: 1) },
                     backToHome: { [weak self] in self?.viewModel.popAll() }
                 )
-                .toAnyView
             )
         )
     }
@@ -97,6 +94,21 @@ final class Flow {
             .toAnyView
         }
         viewModel.showSheet()
+    }
+}
+
+struct NavigationDestinationViewModifier<V: View>: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .navigationDestination(for: NavigationDestination<V>.self) { destination in
+                destination.nextView
+            }
+    }
+}
+
+extension View {
+    func navigationDestinationFor<V: View>(viewType: V.Type) -> some View {
+        modifier(NavigationDestinationViewModifier<V>())
     }
 }
 
