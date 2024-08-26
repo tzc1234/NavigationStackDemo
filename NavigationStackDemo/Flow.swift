@@ -9,10 +9,10 @@ import SwiftUI
 
 struct NavigationDestination<Content: View>: Hashable {
     private let id = UUID()
-    let nextView: Content
+    let view: Content
     
-    init(nextView: Content) {
-        self.nextView = nextView
+    init(view: Content) {
+        self.view = view
     }
     
     static func == (lhs: NavigationDestination, rhs: NavigationDestination) -> Bool {
@@ -54,7 +54,7 @@ final class Flow {
     private func showView1() {
         viewModel.show(
             NavigationDestination(
-                nextView: View1(
+                view: View1(
                     tap: { [weak self] in self?.showView2() }
                 )
             )
@@ -64,7 +64,7 @@ final class Flow {
     private func showView2() {
         viewModel.show(
             NavigationDestination(
-                nextView: View2(
+                view: View2(
                     tap: { [weak self] in self?.showView3() },
                     back: { [weak self] in self?.viewModel.popTo(index: 1) },
                     backToHome: { [weak self] in self?.viewModel.popAll() }
@@ -76,7 +76,7 @@ final class Flow {
     private func showView3() {
         viewModel.show(
             NavigationDestination(
-                nextView: View3(
+                view: View3(
                     tap: { [weak self] in self?.showPopover() },
                     back: { [weak self] in self?.viewModel.popTo(index: 2) },
                     backToView1: { [weak self] in self?.viewModel.popTo(index: 1) },
@@ -101,7 +101,7 @@ struct NavigationDestinationViewModifier<V: View>: ViewModifier {
     func body(content: Content) -> some View {
         content
             .navigationDestination(for: NavigationDestination<V>.self) { destination in
-                destination.nextView
+                destination.view
             }
     }
 }
