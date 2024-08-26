@@ -12,7 +12,6 @@ struct View1: View {
     
     init(tap: @escaping () -> Void) {
         self.tap = tap
-        print("view1")
     }
     
     var body: some View {

@@ -7,20 +7,20 @@
 
 import SwiftUI
 
-struct NextDestination: Hashable {
-    let id = UUID()
+struct NavigationDestination: Hashable {
+    private let id = UUID()
     private let nextView: () -> Void
     
-    init(_ nextView: @escaping () -> Void) {
+    init(nextView: @escaping () -> Void) {
         self.nextView = nextView
     }
     
-    func showNextView() -> NextDestination {
+    func showNextView() -> NavigationDestination {
         nextView()
         return self
     }
     
-    static func == (lhs: NextDestination, rhs: NextDestination) -> Bool {
+    static func == (lhs: NavigationDestination, rhs: NavigationDestination) -> Bool {
         lhs.id == rhs.id
     }
     
@@ -47,21 +47,19 @@ final class Flow {
                 HomeView(tap: { [weak self] in
                     self?.showView1()
                 })
-                .navigationDestination(for: NextDestination.self) { [weak self] _ in
+                .navigationDestination(for: NavigationDestination.self) { [weak self] _ in
                     self?.showNextView?()
                 }
             },
-            sheet: sheet
+            sheet: { [weak self] in
+                self?.showSheet?()
+            }
         )
-    }
-    
-    private func sheet() -> AnyView? {
-        showSheet?()
     }
     
     private func showView1() {
         viewModel.show(
-            NextDestination { [weak self] in
+            NavigationDestination { [weak self] in
                 self?.showNextView = {
                     View1(tap: {
                         self?.showView2()
@@ -75,10 +73,28 @@ final class Flow {
     
     private func showView2() {
         viewModel.show(
-            NextDestination { [weak self] in
+            NavigationDestination { [weak self] in
                 self?.showNextView = {
                     View2(
+                        tap: { self?.showView3() },
+                        back: { self?.viewModel.popTo(index: 1) },
+                        backToHome: { self?.viewModel.popAll() }
+                    )
+                    .toAnyView
+                }
+            }
+            .showNextView()
+        )
+    }
+    
+    private func showView3() {
+        viewModel.show(
+            NavigationDestination { [weak self] in
+                self?.showNextView = {
+                    View3(
                         tap: { self?.showPopover() },
+                        back: { self?.viewModel.popTo(index: 2) }, 
+                        backToView1: { self?.viewModel.popTo(index: 1) },
                         backToHome: { self?.viewModel.popAll() }
                     )
                     .toAnyView
@@ -90,9 +106,11 @@ final class Flow {
     
     private func showPopover() {
         showSheet = {
-            PopoverView(tap: { [weak self] in
-                self?.viewModel.hideSheet()
-            })
+            PopoverView(
+                tap: { [weak self] in
+                    self?.viewModel.hideSheet()
+                }
+            )
             .toAnyView
         }
         viewModel.showSheet()

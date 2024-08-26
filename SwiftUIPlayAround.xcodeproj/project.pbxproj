@@ -14,6 +14,7 @@
 		BE756DB12C7CCEE700596195 /* View2.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE756DB02C7CCEE700596195 /* View2.swift */; };
 		BE756DB32C7CCF2E00596195 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE756DB22C7CCF2E00596195 /* HomeView.swift */; };
 		BE756DB52C7CCF5B00596195 /* PopoverView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE756DB42C7CCF5B00596195 /* PopoverView.swift */; };
+		BE756DB72C7CE0CE00596195 /* View3.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE756DB62C7CE0CE00596195 /* View3.swift */; };
 		BE7FB5302AD0183500D65D69 /* SwiftUIPlayAroundApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE7FB52F2AD0183500D65D69 /* SwiftUIPlayAroundApp.swift */; };
 		BE7FB5342AD0183600D65D69 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE7FB5332AD0183600D65D69 /* Assets.xcassets */; };
 		BE7FB5372AD0183600D65D69 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BE7FB5362AD0183600D65D69 /* Preview Assets.xcassets */; };
@@ -27,6 +28,7 @@
 		BE756DB02C7CCEE700596195 /* View2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View2.swift; sourceTree = "<group>"; };
 		BE756DB22C7CCF2E00596195 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		BE756DB42C7CCF5B00596195 /* PopoverView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopoverView.swift; sourceTree = "<group>"; };
+		BE756DB62C7CE0CE00596195 /* View3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View3.swift; sourceTree = "<group>"; };
 		BE7FB52C2AD0183500D65D69 /* SwiftUIPlayAround.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIPlayAround.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BE7FB52F2AD0183500D65D69 /* SwiftUIPlayAroundApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIPlayAroundApp.swift; sourceTree = "<group>"; };
 		BE7FB5332AD0183600D65D69 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -57,9 +59,10 @@
 			children = (
 				BE0358952B29E7C20006FC3C /* NavigationControlView.swift */,
 				BE756DB22C7CCF2E00596195 /* HomeView.swift */,
+				BE756DB42C7CCF5B00596195 /* PopoverView.swift */,
 				BE756DAE2C7CCEC300596195 /* View1.swift */,
 				BE756DB02C7CCEE700596195 /* View2.swift */,
-				BE756DB42C7CCF5B00596195 /* PopoverView.swift */,
+				BE756DB62C7CE0CE00596195 /* View3.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -178,6 +181,7 @@
 				BE0358962B29E7C20006FC3C /* NavigationControlView.swift in Sources */,
 				BE7FB5302AD0183500D65D69 /* SwiftUIPlayAroundApp.swift in Sources */,
 				BE756DAF2C7CCEC300596195 /* View1.swift in Sources */,
+				BE756DB72C7CE0CE00596195 /* View3.swift in Sources */,
 				BE756DB32C7CCF2E00596195 /* HomeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

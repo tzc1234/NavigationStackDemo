@@ -12,13 +12,12 @@ struct HomeView: View {
     
     init(tap: @escaping () -> Void) {
         self.tap = tap
-        print("start")
     }
     
     var body: some View {
         VStack {
             Button("Next", action: tap)
         }
-        .navigationTitle("Start")
+        .navigationTitle("Home")
     }
 }

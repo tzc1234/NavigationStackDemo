@@ -12,12 +12,11 @@ struct PopoverView: View {
     
     init(tap: @escaping () -> Void) {
         self.tap = tap
-        print("Popover")
     }
     
     var body: some View {
         VStack {
-            Button("Popover Click", action: tap)
+            Button("Hide", action: tap)
         }
     }
 }
