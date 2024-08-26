@@ -1,6 +1,6 @@
 //
 //  NavigationControlView.swift
-//  SwiftUIPlayAround
+//  NavigationStackDemo
 //
 //  Created by Tsz-Lung on 13/12/2023.
 //

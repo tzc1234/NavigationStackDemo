@@ -1,6 +1,6 @@
 //
 //  PopoverView.swift
-//  SwiftUIPlayAround
+//  NavigationStackDemo
 //
 //  Created by Tsz-Lung on 26/08/2024.
 //

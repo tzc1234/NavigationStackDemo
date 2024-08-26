@@ -1,19 +1,19 @@
 //
-//  HomeView.swift
-//  SwiftUIPlayAround
+//  View1.swift
+//  NavigationStackDemo
 //
 //  Created by Tsz-Lung on 26/08/2024.
 //
 
 import SwiftUI
 
-struct HomeView: View {
+struct View1: View {
     let tap: () -> Void
     
     var body: some View {
         VStack {
             Button("Next", action: tap)
         }
-        .navigationTitle("Home")
+        .navigationTitle("View1")
     }
 }

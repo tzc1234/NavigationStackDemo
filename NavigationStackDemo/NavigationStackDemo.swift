@@ -1,6 +1,6 @@
 //
-//  SwiftUIPlayAroundApp.swift
-//  SwiftUIPlayAround
+//  NavigationStackDemoApp.swift
+//  NavigationStackDemo
 //
 //  Created by Tsz-Lung on 06/10/2023.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct SwiftUIPlayAroundApp: App {
+struct NavigationStackDemoApp: App {
     let navigationControlViewModel = NavigationControlViewModel()
     let flow: Flow
     
