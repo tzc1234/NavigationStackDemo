@@ -13,13 +13,6 @@ struct View3: View {
     let backToView1: () -> Void
     let backToHome: () -> Void
     
-    init(tap: @escaping () -> Void, back: @escaping () -> Void, backToView1: @escaping () -> Void, backToHome: @escaping () -> Void) {
-        self.tap = tap
-        self.back = back
-        self.backToView1 = backToView1
-        self.backToHome = backToHome
-    }
-    
     var body: some View {
         VStack {
             Button("Next", action: tap)

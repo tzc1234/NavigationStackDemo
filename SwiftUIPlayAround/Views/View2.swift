@@ -12,12 +12,6 @@ struct View2: View {
     let back: () -> Void
     let backToHome: () -> Void
     
-    init(tap: @escaping () -> Void, back: @escaping () -> Void, backToHome: @escaping () -> Void) {
-        self.tap = tap
-        self.back = back
-        self.backToHome = backToHome
-    }
-    
     var body: some View {
         VStack {
             Button("Next", action: tap)

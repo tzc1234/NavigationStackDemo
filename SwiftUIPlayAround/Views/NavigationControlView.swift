@@ -11,7 +11,7 @@ final class NavigationControlViewModel: ObservableObject {
     @Published var path = NavigationPath()
     @Published var isShowingSheet = false
     
-    func show(_ next: some Hashable) {
+    func show(_ next: NavigationDestination) {
         path.append(next)
     }
     

@@ -9,15 +9,10 @@ import SwiftUI
 
 struct NavigationDestination: Hashable {
     private let id = UUID()
-    private let nextView: () -> Void
+    let nextView: AnyView
     
-    init(nextView: @escaping () -> Void) {
+    init(nextView: AnyView) {
         self.nextView = nextView
-    }
-    
-    func showNextView() -> NavigationDestination {
-        nextView()
-        return self
     }
     
     static func == (lhs: NavigationDestination, rhs: NavigationDestination) -> Bool {
@@ -36,7 +31,6 @@ final class Flow {
         self.viewModel = navigationControlViewModel
     }
     
-    private var showNextView: (() -> AnyView)?
     private var showSheet: (() -> AnyView)?
     
     @ViewBuilder
@@ -47,8 +41,8 @@ final class Flow {
                 HomeView(tap: { [weak self] in
                     self?.showView1()
                 })
-                .navigationDestination(for: NavigationDestination.self) { [weak self] _ in
-                    self?.showNextView?()
+                .navigationDestination(for: NavigationDestination.self) { destination in
+                    destination.nextView
                 }
             },
             sheet: { [weak self] in
@@ -59,57 +53,46 @@ final class Flow {
     
     private func showView1() {
         viewModel.show(
-            NavigationDestination { [weak self] in
-                self?.showNextView = {
-                    View1(tap: {
-                        self?.showView2()
-                    })
-                    .toAnyView
-                }
-            }
-            .showNextView()
+            NavigationDestination(
+                nextView: View1(
+                    tap: { [weak self] in self?.showView2() }
+                )
+                .toAnyView
+            )
         )
     }
     
     private func showView2() {
         viewModel.show(
-            NavigationDestination { [weak self] in
-                self?.showNextView = {
-                    View2(
-                        tap: { self?.showView3() },
-                        back: { self?.viewModel.popTo(index: 1) },
-                        backToHome: { self?.viewModel.popAll() }
-                    )
-                    .toAnyView
-                }
-            }
-            .showNextView()
+            NavigationDestination(
+                nextView: View2(
+                    tap: { [weak self] in self?.showView3() },
+                    back: { [weak self] in self?.viewModel.popTo(index: 1) },
+                    backToHome: { [weak self] in self?.viewModel.popAll() }
+                )
+                .toAnyView
+            )
         )
     }
     
     private func showView3() {
         viewModel.show(
-            NavigationDestination { [weak self] in
-                self?.showNextView = {
-                    View3(
-                        tap: { self?.showPopover() },
-                        back: { self?.viewModel.popTo(index: 2) }, 
-                        backToView1: { self?.viewModel.popTo(index: 1) },
-                        backToHome: { self?.viewModel.popAll() }
-                    )
-                    .toAnyView
-                }
-            }
-            .showNextView()
+            NavigationDestination(
+                nextView: View3(
+                    tap: { [weak self] in self?.showPopover() },
+                    back: { [weak self] in self?.viewModel.popTo(index: 2) },
+                    backToView1: { [weak self] in self?.viewModel.popTo(index: 1) },
+                    backToHome: { [weak self] in self?.viewModel.popAll() }
+                )
+                .toAnyView
+            )
         )
     }
     
     private func showPopover() {
         showSheet = {
             PopoverView(
-                tap: { [weak self] in
-                    self?.viewModel.hideSheet()
-                }
+                tap: { [weak self] in self?.viewModel.hideSheet() }
             )
             .toAnyView
         }
