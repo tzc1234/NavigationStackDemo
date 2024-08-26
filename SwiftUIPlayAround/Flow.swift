@@ -7,11 +7,20 @@
 
 import SwiftUI
 
-struct NextView: Hashable {
+struct NextDestination: Hashable {
     let id = UUID()
-    let view: AnyView
+    private let nextView: () -> Void
     
-    static func == (lhs: NextView, rhs: NextView) -> Bool {
+    init(_ nextView: @escaping () -> Void) {
+        self.nextView = nextView
+    }
+    
+    func showNextView() -> NextDestination {
+        nextView()
+        return self
+    }
+    
+    static func == (lhs: NextDestination, rhs: NextDestination) -> Bool {
         lhs.id == rhs.id
     }
     
@@ -21,112 +30,75 @@ struct NextView: Hashable {
 }
 
 final class Flow {
-    private let navigationControlViewModel: NavigationControlViewModel
+    private let viewModel: NavigationControlViewModel
     
     init(navigationControlViewModel: NavigationControlViewModel) {
-        self.navigationControlViewModel = navigationControlViewModel
+        self.viewModel = navigationControlViewModel
     }
     
-    private var makeSheet: (() -> AnyView)?
+    private var showNextView: (() -> AnyView)?
+    private var showSheet: (() -> AnyView)?
     
     @ViewBuilder
     func startView() -> some View {
-        NavigationControlView(viewModel: navigationControlViewModel, content: {
-            StartView(tap: { [weak self] in
-                guard let self = self else { return }
-                
-                self.navigationControlViewModel.show(NextView(view: self.makeView1()))
-            })
-            .navigationDestination(for: NextView.self) { $0.view }
-        }, sheet: getSheet)
-    }
-    
-    private func getSheet() -> AnyView? {
-        makeSheet?()
-    }
-    
-    private func makeView1() -> AnyView {
-        View1(tap: { [weak self] in
-            guard let self else { return }
-            
-            self.navigationControlViewModel.show(NextView(view: self.makeView2()))
-        })
-        .toAnyView
-    }
-    
-    private func makeView2() -> AnyView {
-        View2(tap: { [weak self] in
-            self?.navigationControlViewModel.showSheet()
-            self?.makeSheet = {
-                PopoverView(tap: {
-                    self?.navigationControlViewModel.hideSheet()
+        NavigationControlView(
+            viewModel: viewModel,
+            content: {
+                HomeView(tap: { [weak self] in
+                    self?.showView1()
                 })
-                .toAnyView
+                .navigationDestination(for: NextDestination.self) { [weak self] _ in
+                    self?.showNextView?()
+                }
+            },
+            sheet: sheet
+        )
+    }
+    
+    private func sheet() -> AnyView? {
+        showSheet?()
+    }
+    
+    private func showView1() {
+        viewModel.show(
+            NextDestination { [weak self] in
+                self?.showNextView = {
+                    View1(tap: {
+                        self?.showView2()
+                    })
+                    .toAnyView
+                }
             }
-        })
-        .toAnyView
+            .showNextView()
+        )
+    }
+    
+    private func showView2() {
+        viewModel.show(
+            NextDestination { [weak self] in
+                self?.showNextView = {
+                    View2(
+                        tap: { self?.showPopover() },
+                        backToHome: { self?.viewModel.popAll() }
+                    )
+                    .toAnyView
+                }
+            }
+            .showNextView()
+        )
+    }
+    
+    private func showPopover() {
+        showSheet = {
+            PopoverView(tap: { [weak self] in
+                self?.viewModel.hideSheet()
+            })
+            .toAnyView
+        }
+        viewModel.showSheet()
     }
 }
 
-struct StartView: View {
-    let tap: () -> Void
-    
-    init(tap: @escaping () -> Void) {
-        self.tap = tap
-        print("start")
-    }
-    
-    var body: some View {
-        VStack {
-            Button("Click0", action: tap)
-        }
-        .navigationTitle("Start")
-    }
-}
-
-struct View1: View {
-    let tap: () -> Void
-    
-    init(tap: @escaping () -> Void) {
-        self.tap = tap
-        print("view1")
-    }
-    
-    var body: some View {
-        VStack {
-            Button("Click1", action: tap)
-        }
-        .navigationTitle("View1")
-    }
-}
-
-struct View2: View {
-    let tap: () -> Void
-    
-    init(tap: @escaping () -> Void) {
-        self.tap = tap
-        print("view2")
-    }
-    
-    var body: some View {
-        VStack {
-            Button("Click2", action: tap)
-        }
-        .navigationTitle("View2")
-    }
-}
-
-struct PopoverView: View {
-    let tap: () -> Void
-    
-    init(tap: @escaping () -> Void) {
-        self.tap = tap
-        print("Popover")
-    }
-    
-    var body: some View {
-        VStack {
-            Button("Popover Click", action: tap)
-        }
-    }
+#Preview {
+    Flow(navigationControlViewModel: NavigationControlViewModel()).startView()
 }
